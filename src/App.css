@@ -1,42 +1,141 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  background-color: #f8fafc;
+  margin: 0;
+  padding: 0;
+  color: #1e293b;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 3rem auto;
+  background: white;
+  padding: 2.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+h1 {
+  text-align: center;
+  color: #1e3a8a;
+  margin-bottom: 2rem;
+}
+
+/* ✅ Input centrati e proporzionali */
+.inputs-horizontal {
+  display: flex;
+  justify-content: center; /* mantiene centrato anche su schermi grandi */
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.input-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 220px; /* larghezza fissa per perfetto allineamento */
+}
+
+.input-block label {
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.5rem;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* ✅ Tutti gli input stessa altezza e centrati */
+.input-block input {
+  width: 100%;
+  height: 45px;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  outline: none;
+  text-align: center;
+  background-color: #f9fafb;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.input-block input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* ✅ Pulsante */
+.reset-btn {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  display: block;
+  margin: 1rem auto;
+  transition: background-color 0.2s ease;
+}
+
+.reset-btn:hover {
+  background-color: #1e3a8a;
+}
+
+.warning {
+  text-align: center;
+  color: #dc2626;
+  font-weight: 500;
+}
+
+/* ✅ Tabella elegante e reattiva */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+}
+
+thead {
+  background-color: #1e3a8a;
+  color: white;
+}
+
+th,
+td {
+  padding: 0.75rem 1rem;
+}
+
+th {
+  text-align: left;
+}
+
+/* "Value" sulla destra nella barra blu */
+.header-right {
+  text-align: right !important;
+}
+
+td {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* alternanza righe */
+tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+tbody tr:hover {
+  background-color: #e2e8f0;
+}
+
+/* ✅ Colonna valori numerici a destra */
+.value-cell {
+  text-align: right;
+  font-weight: 500;
+  color: #0f172a;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .inputs-horizontal {
+    flex-direction: column;
+    align-items: center;
   }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }

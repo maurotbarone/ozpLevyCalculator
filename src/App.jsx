@@ -1,111 +1,123 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import "./App.css";
 
 function App() {
-  const [EE, setEE] = useState("50"); // usare stringa
-  const [PW, setPW] = useState("2");
-  const [services, setServices] = useState("100000");
+  // ✅ Valori iniziali modificabili dall'utente
+  const [EE, setEE] = useState(950);
+  const [PW, setPW] = useState(5);
+  const [services, setServices] = useState(122000);
+  const avgWage = 42658;
 
-  const avgWage = 42658; // valore fisso
+  const [result, setResult] = useState(null);
 
-  const calculateData = () => {
-    const EE_val = Number(EE) || 0;
-    const PW_val = Number(PW) || 0;
-    const services_val = Number(services) || 0;
+  useEffect(() => {
+    const EE_val = parseFloat(EE) || 0;
+    const PW_val = parseFloat(PW) || 0;
+    const services_val = parseFloat(services) || 0;
 
-    if (EE_val <= 25) return null;
+    if (EE_val > 25) {
+      const requiredOZP = EE_val * 0.04;
+      const actualPct = (PW_val / EE_val) * 100;
+      const multiplier = actualPct >= 3 ? 1.0 : actualPct >= 1 ? 2.0 : 3.5;
 
-    const required_OZP = EE_val * 0.04;
-    const actual_pct = EE_val > 0 ? (PW_val / EE_val) * 100 : 0;
-    let multiplier;
-    if (actual_pct >= 3) multiplier = 1.0;
-    else if (actual_pct >= 1) multiplier = 2.0;
-    else multiplier = 3.5;
+      const missingBefore = Math.max(requiredOZP - PW_val, 0);
+      const substituteEquiv = services_val / (7 * avgWage);
+      const missingAfter = Math.max(requiredOZP - (PW_val + substituteEquiv), 0);
 
-    const missing_before = Math.max(required_OZP - PW_val, 0);
-    const substitute_equiv = avgWage > 0 ? services_val / (7 * avgWage) : 0;
-    const missing_after = Math.max(required_OZP - (PW_val + substitute_equiv), 0);
+      const levyPerMissing = multiplier * avgWage;
+      const levyWithout = missingBefore * levyPerMissing;
+      const levyWith = missingAfter * levyPerMissing;
+      const difference = levyWithout - levyWith;
 
-    const levy_per_missing = multiplier * avgWage;
-    const levy_without_services = missing_before * levy_per_missing;
-    const levy_with_services = missing_after * levy_per_missing;
-    const difference = levy_without_services - levy_with_services;
+      setResult({
+        "Total employees (EE)": EE_val,
+        "Employees with disabilities (PWD)": PW_val,
+        "Average wage 2025 (CZK)": avgWage,
+        "Services purchased (CZK)": services_val,
+        "Required OZP (4%)": requiredOZP.toFixed(2),
+        "Actual % of OZP": actualPct.toFixed(2),
+        "Multiplier": multiplier,
+        "Missing OZP before services": missingBefore.toFixed(2),
+        "OZP equivalent from services": substituteEquiv.toFixed(2),
+        "Missing OZP after services": missingAfter.toFixed(2),
+        "Levy without services (CZK)": levyWithout.toFixed(0),
+        "Levy with services (CZK)": levyWith.toFixed(0),
+        "Difference / Saved (CZK)": difference.toFixed(0),
+      });
+    } else {
+      setResult(null);
+    }
+  }, [EE, PW, services]);
 
-    return [
-      ["Total employees (EE)", EE_val],
-      ["Employees with disabilities (PWD)", PW_val],
-      ["Average wage 2025 (CZK)", avgWage],
-      ["Services purchased (CZK)", services_val],
-      ["Required OZP (4%)", required_OZP.toFixed(2)],
-      ["Actual % of OZP", actual_pct.toFixed(2)],
-      ["Multiplier", multiplier],
-      ["Missing OZP before services", missing_before.toFixed(2)],
-      ["OZP equivalent from services", substitute_equiv.toFixed(2)],
-      ["Missing OZP after services", missing_after.toFixed(2)],
-      ["Levy without services (CZK)", Math.round(levy_without_services)],
-      ["Levy with services (CZK)", Math.round(levy_with_services)],
-      ["Difference / Saved (CZK)", Math.round(difference)],
-    ];
+  // ✅ Reset valori iniziali
+  const resetForm = () => {
+    setEE(650);
+    setPW(5);
+    setServices(122000);
+    setResult(null);
   };
 
-  const data = calculateData();
-
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h2>OZP Levy Calculator</h2>
+    <div className="container">
+      <h1>OZP Levy Calculation</h1>
 
-      <div style={{ marginBottom: "10px" }}>
-        <label>
-          Total employees (EE):{" "}
+      {/* Input centrati e in orizzontale */}
+      <div className="inputs-horizontal">
+        <div className="input-block">
+          <label>Total employees (EE)</label>
           <input
             type="number"
             value={EE}
-            onChange={e => setEE(e.target.value)}
+            onChange={(e) => setEE(e.target.value)}
           />
-        </label>
-      </div>
-      <div style={{ marginBottom: "10px" }}>
-        <label>
-          Employees with disabilities (PWD):{" "}
+        </div>
+
+        <div className="input-block">
+          <label>Employees with disabilities (PW)</label>
           <input
             type="number"
             value={PW}
-            onChange={e => setPW(e.target.value)}
+            onChange={(e) => setPW(e.target.value)}
           />
-        </label>
-      </div>
-      <div style={{ marginBottom: "10px" }}>
-        <label>
-          Services purchased (CZK):{" "}
+        </div>
+
+        <div className="input-block">
+          <label>Services purchased (CZK)</label>
           <input
             type="number"
             value={services}
-            onChange={e => setServices(e.target.value)}
+            onChange={(e) => setServices(e.target.value)}
           />
-        </label>
+        </div>
       </div>
 
-      <p>Average wage (CZK): <b>{avgWage}</b> (fixed)</p>
+      <button className="reset-btn" onClick={resetForm}>
+        Reset
+      </button>
 
-      {Number(EE) <= 25 ? (
-        <p style={{ color: "red" }}>Total employees must be greater than 25.</p>
-      ) : (
-        <table border="1" cellPadding="5" style={{ marginTop: "20px", borderCollapse: "collapse" }}>
+      {/* Messaggio warning se EE <= 25 */}
+      {EE && parseFloat(EE) <= 25 ? (
+        <p className="warning">
+          Total employees must be greater than 25 to be subject to the mandatory share.
+        </p>
+      ) : result ? (
+        <table>
           <thead>
             <tr>
               <th>Parameter</th>
-              <th>Value</th>
+              <th className="header-right">Value</th>
             </tr>
           </thead>
           <tbody>
-            {data.map(([param, val], i) => (
-              <tr key={i}>
-                <td>{param}</td>
-                <td>{val}</td>
+            {Object.entries(result).map(([key, value]) => (
+              <tr key={key}>
+                <td>{key}</td>
+                <td className="value-cell">{value}</td>
               </tr>
             ))}
           </tbody>
         </table>
-      )}
+      ) : null}
     </div>
   );
 }
