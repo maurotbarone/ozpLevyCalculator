@@ -73,7 +73,7 @@ function App() {
         </div>
 
         <div className="input-block">
-          <label>Employees with disabilities (PW)</label>
+          <label>EE's with disabilities (PWD)</label>
           <input
             type="number"
             value={PW}
