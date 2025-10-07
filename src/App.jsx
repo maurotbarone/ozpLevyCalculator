@@ -18,31 +18,36 @@ function App() {
     if (EE_val > 25) {
       const requiredOZP = EE_val * 0.04;
       const actualPct = (PW_val / EE_val) * 100;
-      const multiplier = actualPct >= 3 ? 1.0 : actualPct >= 1 ? 2.0 : 3.5;
+      //const multiplier = actualPct >= 3 ? 1.0 : actualPct >= 1 ? 2.0 : 3.5;
 
       const missingBefore = Math.max(requiredOZP - PW_val, 0);
       const substituteEquiv = services_val / (7 * avgWage);
       const missingAfter = Math.max(requiredOZP - (PW_val + substituteEquiv), 0);
-
+      
+      //parti aggiunte per aggiornare il multiplier in base agli OZP efettivi+equivalenti
+      const actualPctPwEq = ((PW_val + substituteEquiv)/EE_val) * 100;
+      const multiplier = actualPctPwEq >= 3 ? 1.0 : actualPctPwEq >= 1 ? 2.0 : 3.5;
+      
       const levyPerMissing = multiplier * avgWage;
       const levyWithout = missingBefore * levyPerMissing;
       const levyWith = missingAfter * levyPerMissing;
       const difference = levyWithout - levyWith;
 
       setResult({
-        "Total employees (EE)": EE_val,
-        "Employees with disabilities (PWD)": PW_val,
-        "Average wage 2025 (CZK)": avgWage,
-        "Services purchased (CZK)": services_val,
-        "Required OZP (4%)": requiredOZP.toFixed(2),
-        "Actual % of OZP": actualPct.toFixed(2),
+        "Total employees (EE)": EE_val.toLocaleString(),
+        "Employees with disabilities (PWD)": PW_val.toLocaleString(),
+        "Average wage 2025 (CZK)": avgWage.toLocaleString(),
+        "Services purchased (CZK)": services_val.toLocaleString(),
+        "Required OZP (4%)": requiredOZP.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        "Actual % of OZP": actualPct.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
         "Multiplier": multiplier,
-        "Missing OZP before services": missingBefore.toFixed(2),
-        "OZP equivalent from services": substituteEquiv.toFixed(2),
-        "Missing OZP after services": missingAfter.toFixed(2),
-        "Levy without services (CZK)": levyWithout.toFixed(0),
-        "Levy with services (CZK)": levyWith.toFixed(0),
-        "Difference / Saved (CZK)": difference.toFixed(0),
+        "Missing OZP before services": missingBefore.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        "OZP equivalent from services": substituteEquiv.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        "Actual % of OZP + Equivalent": actualPctPwEq.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        "Missing OZP after services": missingAfter.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        "Levy without services (CZK)": levyWithout.toLocaleString(undefined, { maximumFractionDigits: 0 }),
+        "Levy with services (CZK)": levyWith.toLocaleString(undefined, { maximumFractionDigits: 0 }),
+        "Difference / Saved (CZK)": difference.toLocaleString(undefined, { maximumFractionDigits: 0 }),
       });
     } else {
       setResult(null);
