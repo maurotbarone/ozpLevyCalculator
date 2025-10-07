@@ -6,7 +6,7 @@ function App() {
   const [EE, setEE] = useState(950);
   const [PW, setPW] = useState(5);
   const [services, setServices] = useState(122000);
-  const avgWage = 42658;
+  const avgWage = 48161;
 
   const [result, setResult] = useState(null);
 
@@ -36,7 +36,7 @@ function App() {
       setResult({
         "Total employees (EE)": EE_val.toLocaleString(),
         "Employees with disabilities (PWD)": PW_val.toLocaleString(),
-        "Average wage 2025 (CZK)": avgWage.toLocaleString(),
+        "Average wage 2025 Q1-Q2 (CZK)": avgWage.toLocaleString(),
         "Services purchased (CZK)": services_val.toLocaleString(),
         "Required OZP (4%)": requiredOZP.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
         "Actual % of OZP": actualPct.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
